@@ -1106,6 +1106,8 @@ def Optimize():
                             Case[FOUND].append(HtmlTableReduced[ColumnInHtml][LineInHtml])
                         elif((HtmlTableReduced[ColumnInHtml][LineInHtml] in Case[FUND_MULTIPLE_TIME])==False):
                             Case[FUND_MULTIPLE_TIME].append(HtmlTableReduced[ColumnInHtml][LineInHtml])
+                        if((HtmlTableReduced[ColumnInHtml][LineInHtml] in Case[NOT_FOUND])):
+                            Case[NOT_FOUND].remove(HtmlTableReduced[ColumnInHtml][LineInHtml])
 
             if ((HtmlTableReduced[ColumnInHtml][LineInHtml] in Case[FOUND]) ==False):
                 if((HtmlTableReduced[ColumnInHtml][LineInHtml] in Case[NOT_FOUND])== False):
