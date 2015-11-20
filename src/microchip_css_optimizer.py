@@ -1213,7 +1213,7 @@ else:coef=0.6
 
 #Definition for the Global WorkSpace
 
-lfStep1 = tk.LabelFrame(Window, text="Step1:")
+lfStep1 = tk.LabelFrame(Window, text="Step1:",bg='gray90')
 lfStep2 = tk.LabelFrame(Window, text="Step2:")
 lfWarning = tk.LabelFrame(Window, text="Warning:")
 lfStep3 = tk.LabelFrame(Window, text="Step3:")
