@@ -29,7 +29,7 @@ except:
         #######################
         ##GENERAL DECLARATION##
         #######################
-Version = "v0.93"
+Version = "v0.94"
 HtmlPath = []                                                                           # Stores the HTML files path
 CssPath = []                                                                            # Stores the CSS files path
 Modifier1DataCSS = []                                                                   # Stores the CSS modifier: Element
@@ -45,7 +45,7 @@ ButtonList = []                                                                 
 WarningType1 = []                                                                       # List all the warning type1, Default: No CSS defintion
 WarningType2 = []                                                                       # List all the warning type2, Default: Multiple CSS definiton
 WarningType3 = []                                                                       # List all the warning type3, Default: CSS not oftenly used
-WarningList = [WarningType1,WarningType2,WarningType3]                                  # List of all the Warnings in the warning step
+WarningList = [WarningType1, WarningType2, WarningType3]                                  # List of all the Warnings in the warning step
 Modifier1DataHTML = []                                                                  # Stores the HTML modifier: Element
 Modifier2DataHTML = []                                                                  # Stores the HTML modifier: Class
 Modifier3DataHTML = []                                                                  # Stores the HTML modifier: Id
@@ -312,9 +312,17 @@ def GenerateCss(Type):
         SaveAs = asksaveasfile(mode='w', defaultextension="",title="Save As:", filetypes=[('min CSS files', '.min.css')])
         if SaveAs is None: # asksaveasfile return `None` if dialog closed with "cancel".
             return
+        name= SaveAs.name
+        if SaveAs.name[(len(SaveAs.name)-8):]!=".min.css":
+            os.rename(SaveAs.name,SaveAs.name +".min.css")
+            name+=".min.css"
         SaveAs.write(FileContent)
         SaveAs.close()
-        tkinter.messagebox.showinfo("Generation successful","Your file was successfully generated under:\n"+SaveAs.name)
+        try:
+            tkinter.messagebox.showinfo("Generation successful","Your file was successfully generated under:\n"+name)
+        except:
+            tkMessageBox.showinfo("Generation successful","Your file was successfully generated under:\n"+name)
+
     else:
         SaveAs = asksaveasfile(mode='w', defaultextension="",title="Save As:", filetypes=[('CSS files', '.css')])
         if SaveAs is None: # asksaveasfile return `None` if dialog closed with "cancel".
