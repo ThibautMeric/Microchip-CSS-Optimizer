@@ -9,11 +9,21 @@ __date__ = "$29 oct. 2015 10:35:15$"
 
 #Import
 
-import tkinter as tk
-from tkinter.filedialog import *
-from tkinter.ttk import *
-import tkinter.messagebox
-import os
+try:
+    import os
+    import tkinter as tk
+    from tkinter.filedialog import *
+    from tkinter.ttk import *
+    import tkinter.messagebox
+except:
+    import os
+    import Tkinter as tk
+    from tkFileDialog import *
+    from ttk import *
+    import tkMessageBox
+    from Tkinter import *
+
+
     # Needed for CheckButton
 
         #######################
@@ -32,20 +42,20 @@ Modifier2Name = "Class"                                                         
 Modifier3Name = "Id"                                                                    # Name of Modifier1 (default: Id )
 Modifier4Name = "At-Rule"                                                              # Name of Modifier1 (default: At-Rules)
 ButtonList = []                                                                         # List of all the Checkbuttons in the frame selected or not by the user
-WarningType1 = []                                                                       # List all the warning type1, Default: No CSS defintion 
+WarningType1 = []                                                                       # List all the warning type1, Default: No CSS defintion
 WarningType2 = []                                                                       # List all the warning type2, Default: Multiple CSS definiton
 WarningType3 = []                                                                       # List all the warning type3, Default: CSS not oftenly used
 WarningList = [WarningType1,WarningType2,WarningType3]                                  # List of all the Warnings in the warning step
 Modifier1DataHTML = []                                                                  # Stores the HTML modifier: Element
 Modifier2DataHTML = []                                                                  # Stores the HTML modifier: Class
 Modifier3DataHTML = []                                                                  # Stores the HTML modifier: Id
-HtmlTable = [Modifier1DataHTML, Modifier2DataHTML, Modifier3DataHTML]                   # Stores Store all the HTML data 
+HtmlTable = [Modifier1DataHTML, Modifier2DataHTML, Modifier3DataHTML]                   # Stores Store all the HTML data
 CBStep2State = ["", "", "", "", "Select?", Modifier1Name]                               # Stores the state of the CBSelChoice 0:Modifier1 1:Modifier2 3:Modifier3 4:Modifier4 5:Default 6:Previous Modifier Selected
 
     ##############################
     ##END OF GENERAL DECLARATION##
     ##############################
-                              
+
         ########################
         ##FUNCTION DECLARATION##
         ########################
@@ -61,7 +71,7 @@ class CssData:
     - NbIt: Number of iteration in the HTML file(s)
     - SelectionMode: boolean defining if the modifier will appear in the final CSS
     """
-    
+
     def __init__(self, Type, Name, Data, NbIt):
         BooleanTable=[]
         for i in range(0, len(Name)):
@@ -80,7 +90,7 @@ class AtRuleData(CssData):
     - AtRuleData extends a classic CssData because an AtRule Modifier has a different strucutre than other CssData
     - Modifier1/Modifier2/Modifier3/Modifier4:List CssDatas included in the At_Rule (by default stored as element/id/clas/atrules)
     """
-    
+
     def __init__(self, Type, Name, Data, NbIt):
         CssData.__init__(self, Type, Name, Data, NbIt)
         self.Modifier1 = []
@@ -94,7 +104,7 @@ class CheckButtonExtended:
     """
     Class enlarging the definiton of Checkbuttons
     """
-    
+
     def __init__(self, Name,NameLenght,Variable):
         self.checkbutton = tk.Checkbutton(frame, text=Name[:NameLenght], onvalue=True, offvalue=False, variable=Variable,command=SetCurrent)
         self.name= Name
@@ -104,17 +114,17 @@ pass
 
 # Fucntion declaration
 def EnableAddHtml():
-    AddHtml.configure(state="active")   
+    AddHtml.configure(state="active")
 pass
 
 def EnableAddCss():
-    AddCss.configure(state="active")   
+    AddCss.configure(state="active")
 pass
 
 def Reset():
-    
+
     # re enable path modifications
-    
+
     BrowseCss.configure(state="active")
     BrowseHtml.configure(state="active")
     Read.configure(state="active")
@@ -127,9 +137,9 @@ def Reset():
     lfWarning.grid_forget()
     lfStep3.grid_forget()
     Bottom.grid(row=2, column=1)
-    
+
     #Reset data
-    
+
     for i in range(0,len(HtmlPath)):
         del HtmlPath[0]
     for i in range(0,len(CssPath)):
@@ -145,27 +155,27 @@ def Reset():
             del WarningList[i][0]
 
     WarningList[2].clear()
-    
-    #Reset lfstep2 
-    
-    CBStep2State = ["", "", "", "", "Select?", Modifier1Name]  
+
+    #Reset lfstep2
+
+    CBStep2State = ["", "", "", "", "Select?", Modifier1Name]
     CBModifier.set(ModifierList[0])
     CBSelChoice.set(CBStep2State[4])
     CBViewChoice.set(ChoiceList2[0])
     SearchBar.delete(0,END)
-    
+
     #Refresh
-        
+
     RefreshStep1()
-    
+
 pass
-    
+
 def OpenCSS():
     filepath1 = askopenfilename(title="Open a file", filetypes=[('CSS files', '.css')])
     TextCss.set("")
     TextCss.set(filepath1)
     entryCss.xview_moveto(1)
-    AddCss.configure(state="active")    
+    AddCss.configure(state="active")
 pass
 
 def OpenHTML():
@@ -176,7 +186,7 @@ def OpenHTML():
     AddHtml.configure(state="active")
 pass
 
-def AddCSS():  
+def AddCSS():
     CssPath.append(entryCss.get())
     RefreshStep1()
     AddCss.configure(state="disabled")
@@ -189,7 +199,7 @@ def AddHTML():
     RefreshStep1()
     AddHtml.configure(state="disabled")
     Read.grid(row=len(CssPath) + len(HtmlPath) + 9, column=0, pady="5")
-    
+
 pass
 def SetCurrent():
     CBSelChoice.set(ChoiceList[2])
@@ -205,23 +215,23 @@ def GenerateCss(Type):
     IS_CLASSIC=0
     IS_DOT_MIN=1
     FileContent="/*Generated by Microchip CSS Optimizer " + Version +"*/\n"
-   
+
     #Insert in the file Modifier 1-2-3
-    
+
     for ColumnInCss in range(0,len(CssTable)-1):                                  # define position in CSS table
         for LineInCss in range(0,len(CssTable[ColumnInCss])):
             IndexToAdd=[]
-            
+
             for NameIndex in range(0,len(CssTable[ColumnInCss][LineInCss].name)): # get names used
                 if (CssTable[ColumnInCss][LineInCss].selectmode[NameIndex].get()==True):
                     IndexToAdd.append(NameIndex)
-                    
+
             for i in IndexToAdd:                                                  # print names used
                 FileContent+=CssTable[ColumnInCss][LineInCss].name[i]
                 if(IndexToAdd.index(i)<len(IndexToAdd)-1):
                     FileContent+=(",")
                 FileContent+="\n"
-                
+
             if(len(IndexToAdd)>0):                                                # print data
                 Index = []
                 for i in range(0,len(CssTable[ColumnInCss][LineInCss].data)):
@@ -230,13 +240,13 @@ def GenerateCss(Type):
                 tmp=list(CssTable[ColumnInCss][LineInCss].data)
                 y=0
                 for i in range(0,len(Index)):
-                    tmp.insert(Index[i]+y,"\n")       
+                    tmp.insert(Index[i]+y,"\n")
                     y+=1
                 FileContent+=''.join(tmp) + " "
                 FileContent+="\n"
-    
+
     #Insert in the file Modifier 4, default At-Rule
-        
+
     ColumnInCss=3                                                                 # define position in CSS table
     for LineInCss in range(0,len(CssTable[ColumnInCss])):
 
@@ -246,45 +256,45 @@ def GenerateCss(Type):
             FileContent +=CssTable[ColumnInCss][LineInCss].name[0] +"\n" + "{" + "\n"
             for ColumnInAtRule in range(0,len(AtRuleTable)):                      # define position in AtRule
                 for LineInAtRule in range(0,len(AtRuleTable[ColumnInAtRule])):
-                    
+
                     for NameIndex in range(0,len(AtRuleTable[ColumnInAtRule][LineInAtRule].name)): # get names used
 
                         if (AtRuleTable[ColumnInAtRule][LineInAtRule].nbit[NameIndex]>0):
-                            
+
                             IndexToAdd.append(NameIndex)
-                    
+
 
                     if((CssTable[ColumnInCss][LineInCss].selectmode[0].get()==True)and(CssTable[ColumnInCss][LineInCss].nbit[0]==0)):# Handle case user wants the At-Rule even if not used
 
                         for NameIndex in range(0,len(AtRuleTable[ColumnInAtRule][LineInAtRule].name)): # get names used
                             IndexToAdd.append(NameIndex)
-                    
-                    
-                    
+
+
+
                     for i in IndexToAdd:                                                   # print names used
                         FileContent+= "\t" + AtRuleTable[ColumnInAtRule][LineInAtRule].name[i]
                         if(i<len(IndexToAdd)-1):
                             FileContent+=(",")
                         FileContent+="\n"
-                    
-                    
+
+
                     if(len(IndexToAdd)>0):                                                # print data
                         FileContent+="\t"
                         Index = []
 
                         for i in range(0,len(AtRuleTable[ColumnInAtRule][LineInAtRule].data)):
-                            if ((AtRuleTable[ColumnInAtRule][LineInAtRule].data[i]==";")or (AtRuleTable[ColumnInAtRule][LineInAtRule].data[i]=="{")):                           
+                            if ((AtRuleTable[ColumnInAtRule][LineInAtRule].data[i]==";")or (AtRuleTable[ColumnInAtRule][LineInAtRule].data[i]=="{")):
                                     while(AtRuleTable[ColumnInAtRule][LineInAtRule].data[i+1]==" "):
                                         i+=1
                                     Index.append(i)
-                                    
+
                         temp = AtRuleTable[ColumnInAtRule][LineInAtRule].data
                         temp = temp.replace("  ", " ")
                         temp = temp.replace("   ", " ")
                         temp = temp.replace("    ", " ")
                         tmp=list(temp)
                         for i in range(0,len(Index)):
-                            tmp.insert(int(Index[i]),"\n\t")       
+                            tmp.insert(int(Index[i]),"\n\t")
 
                         FileContent+=''.join(tmp)
                         FileContent+="\n"
@@ -297,8 +307,8 @@ def GenerateCss(Type):
         FileContent = FileContent.replace('\t', '')
         FileContent = FileContent.replace("  ", " ")
         FileContent = FileContent.replace("   ", " ")
-        FileContent = FileContent.replace("    ", "")    
-        
+        FileContent = FileContent.replace("    ", "")
+
         SaveAs = asksaveasfile(mode='w', defaultextension="",title="Save As:", filetypes=[('min CSS files', '.min.css')])
         if SaveAs is None: # asksaveasfile return `None` if dialog closed with "cancel".
             return
@@ -309,79 +319,86 @@ def GenerateCss(Type):
         SaveAs = asksaveasfile(mode='w', defaultextension="",title="Save As:", filetypes=[('CSS files', '.css')])
         if SaveAs is None: # asksaveasfile return `None` if dialog closed with "cancel".
             return
+        name= SaveAs.name
+        if SaveAs.name[(len(SaveAs.name)-4):]!=".css":
+            os.rename(SaveAs.name,SaveAs.name +".css")
+            name+=".css"
         SaveAs.write(FileContent)
         SaveAs.close()
-        tkinter.messagebox.showinfo("Generation successful","Your file was successfully generated under:\n"+SaveAs.name)
-        
+        try:
+            tkinter.messagebox.showinfo("Generation successful","Your file was successfully generated under:\n"+name)
+        except:
+            tkMessageBox.showinfo("Generation successful","Your file was successfully generated under:\n"+name)
 
-    
-    
+
+
+
 pass
 
 def FillCanvasStep2():
-    
+
     #definition
-    
+
     ModifierPerLine = 5                   # Controls the number of modifier per line
     NameLenght = 15                       # Controls the lenght of the Name displayed the Checkbutton
     ModifierIndex = -1                    # CssTable line to read
-    SelectionChoice = CBSelChoice.get()   # Need this for treatment without modifying the value of the Combobox 
+    SelectionChoice = CBSelChoice.get()   # Need this for treatment without modifying the value of the Combobox
     ColumnStart = 0                       # Controls the position of the first element in grid manager
     RowStart = 0                          # Controls the position of the first element in grid manager
     ToDisplay=[]                          # Table storing the Checkbutton index which will be displayed
-    
+
     # Apply some display settings depending on the user request such as:
     #   - The good index to read in CssTable
     #   - The number of modifier per line
-    #   - the lenght of the Name displayed on the Checkbutton 
-    
+    #   - the lenght of the Name displayed on the Checkbutton
+
     if (CBModifier.get() == Modifier1Name): # default Element
         ModifierIndex = 0
         ModifierPerLine = 5
         NameLenght = 22
-        
+
     elif (CBModifier.get() == Modifier2Name):# default Class
         ModifierIndex = 1
         ModifierPerLine = 5
         NameLenght = 22
-        
+
     elif (CBModifier.get() == Modifier3Name):# default Id
         ModifierIndex = 2
         ModifierPerLine = 5
         NameLenght = 22
-        
+
     elif (CBModifier.get() == Modifier4Name):# default At-Rule
         ModifierIndex = 3
         ModifierPerLine = 2
         NameLenght = 150
-       
+
     #Clean the frame
-            
+
     for i in range(0, len(ButtonList)):
         ButtonList[0].checkbutton.destroy()
         del ButtonList[0]
 
-    #Create the CheckButtons  
-    
+    #Create the CheckButtons
+
     for i in range(0, len(CssTable[ModifierIndex])): # for each element in the CssTable at the good index
-        for j in range(0, len(CssTable[ModifierIndex][i].name)):# each name has to be displayed independently                
-            
+        for j in range(0, len(CssTable[ModifierIndex][i].name)):# each name has to be displayed independently
+
             NewCheckButton = CheckButtonExtended(CssTable[ModifierIndex][i].name[j],NameLenght,CssTable[ModifierIndex][i].selectmode[j])
             ButtonList.append(NewCheckButton)
-   
+
     #Apply Display settings:
-    
+
     for i in range(0,len(ButtonList)):
         if (CBViewChoice.get() == ChoiceList2[0]):
             ToDisplay.append(i)
         elif (CBViewChoice.get() == ChoiceList2[1]):
             if((ButtonList[i].variable.get())==True):
-                ToDisplay.append(i)                            
+                ToDisplay.append(i)
         elif (CBViewChoice.get() == ChoiceList2[2]):
             if((ButtonList[i].variable.get())==False):
-                ToDisplay.append(i)   
-            
-    
+                ToDisplay.append(i)
+
+
     #Apply Search settings:
     if((len(SearchBar.get()))>0):
         tmp=[]
@@ -389,85 +406,85 @@ def FillCanvasStep2():
             if(str(SearchBar.get())in ButtonList[i].name):
                 tmp.append(i)
         ToDisplay=tmp
-    
+
     #Apply Selection settings:
-    
+
     if(len(ButtonList) > 0):
-        
+
         if ((SelectionChoice in ChoiceList) == False): #check that SelectionChoice is valid
             SelectionChoice = "Default"
 
         if (SelectionChoice == ChoiceList[0]):#None
-                
+
             for i in ToDisplay:
                 ButtonList[i].checkbutton.deselect()
-        
+
         elif (SelectionChoice == ChoiceList[1]):# Default
-            
-            CheckbuttonIndex=0   
-            
+
+            CheckbuttonIndex=0
+
             for i in range(0, len(ButtonList)):
-                ButtonList[i].checkbutton.deselect()     
-            
+                ButtonList[i].checkbutton.deselect()
+
             for Line in range(0, len(CssTable[ModifierIndex])):
                 for NameIndex in range(0, len(CssTable[ModifierIndex][Line].name)):
                     if (CssTable[ModifierIndex][Line].nbit[NameIndex]>0):
                         ButtonList[CheckbuttonIndex].checkbutton.select()
                         CssTable[ModifierIndex][Line].selectmode[NameIndex]==True
                     CheckbuttonIndex+=1
-                    
-        elif (SelectionChoice == ChoiceList[2]):#Current       
+
+        elif (SelectionChoice == ChoiceList[2]):#Current
             CheckbuttonIndex=0
             for Line in range(0, len(CssTable[ModifierIndex])):
                 for NameIndex in range(0, len(CssTable[ModifierIndex][Line].name)):
                     if (CssTable[ModifierIndex][Line].selectmode[NameIndex] == True):
                         ButtonList[CheckbuttonIndex].checkbutton.select()
                     CheckbuttonIndex+=1
-                        
+
         elif (SelectionChoice == ChoiceList[3]):#All
-                
+
             for i in ToDisplay:
                 ButtonList[i].checkbutton.select()
-    
+
         if((len(SearchBar.get()))>0):CBSelChoice.set(ChoiceList[2])
-    
-    #fill the frame inside the canvas          
-              
+
+    #fill the frame inside the canvas
+
     Column = ColumnStart
     Row = RowStart
-    
-    for i in ToDisplay: 
+
+    for i in ToDisplay:
         if (Column==ModifierPerLine):
                 Column = ColumnStart
                 Row +=1
         ButtonList[i].checkbutton.grid(row=Row, column=Column, sticky="w")
         frame.grid_columnconfigure(Column,minsize=(WidthCBModifier/ModifierPerLine))
         Column+=1
-    
-    if (len(ToDisplay)<2):    
+
+    if (len(ToDisplay)<2):
         lfModifier.configure(text=str(len(ToDisplay))+ " corresponding " +CBModifier.get() + " found in the CSS")
-    elif (CBModifier.get()[-1]=="s"):    
+    elif (CBModifier.get()[-1]=="s"):
         lfModifier.configure(text=str(len(ToDisplay))+ " corresponding " +CBModifier.get() + "es found in the CSS")
-    elif (CBModifier.get()[-1]=="y"):    
+    elif (CBModifier.get()[-1]=="y"):
         lfModifier.configure(text=str(len(ToDisplay))+ " corresponding " +CBModifier.get()[:-1] + "ies found in the CSS")
-    else:   
+    else:
         lfModifier.configure(text=str(len(ToDisplay))+ " corresponding " +CBModifier.get() + "s found in the CSS")
-    
+
 pass
-def FillCanvasWarning():  
+def FillCanvasWarning():
     DisplayWarning1 = []
     DisplayWarning2 = []
     DisplayWarning3 = []
     Display = [DisplayWarning1,DisplayWarning2,DisplayWarning3]
     tmp=[]
-    HideContainingX = [] 
-    HideNamedX = [] 
-    Displaymodifier = [HideContainingX,HideNamedX] 
+    HideContainingX = []
+    HideNamedX = []
+    Displaymodifier = [HideContainingX,HideNamedX]
     tmp2 = ""
     tmp2 = ''.join(map(str,EntrySelector.get()))
-    
+
    #Get the elements not to show
-   
+
     for i in range(0,len(tmp2.split(' '))):
         tmp.insert(int(i),tmp2.split(' ')[i])
 
@@ -476,7 +493,7 @@ def FillCanvasWarning():
             Displaymodifier[0].append(tmp[index].replace('*', ''))
         else:
             Displaymodifier[1].append(tmp[index])
-    
+
     #Error No CSS files: Check if displayed or not
 
     for index in range(0,len(WarningList[0])):
@@ -487,17 +504,17 @@ def FillCanvasWarning():
             if ((WarningList[0][index].find(HideContainingX[i]))>-1):
 
                 InNoContaining = 1
-        
+
         for k in range(0,len(HideNamedX)):
             if (HideNamedX[k] == WarningList[0][index]):
                 InNoNamed = 1
-        
+
         if(InNoContaining+InNoNamed==0):
             string ="Warning: " + str(WarningList[0][index]) +" is not defined in any of the selected CSS files"
             Display[0].append(string)
-    
+
      #Error Defined multiple times: Check if displayed or not
-    
+
     for index in range(0,len(WarningList[1])):
         InNoContaining = 0
         InNoNamed = 0
@@ -508,13 +525,13 @@ def FillCanvasWarning():
         for k in range(0,len(HideNamedX)):
             if (HideNamedX[k] == WarningList[1][index]):
                 InNoNamed = 1
-        
+
         if(InNoContaining+InNoNamed==0):
             string = "Warning: " + str(WarningList[1][index]) + " is defined more than one time, compress it in one definiton may lighten your CSS file"
             Display[1].append(string)
-    
-    #Error not oftenly used: Check if displayed or not        
-    if(len(WarningList[2])>0):        
+
+    #Error not oftenly used: Check if displayed or not
+    if(len(WarningList[2])>0):
         for key,Iteration in WarningList[2].items():
             InNoContaining = 0
             InNoNamed = 0
@@ -528,7 +545,7 @@ def FillCanvasWarning():
 
             if(InNoContaining+InNoNamed==0):
                 string = "Warning: {} is only used {} time(s), removing it's definiton may lighten your CSS file".format(key,Iteration)
-                Display[2].append(string) 
+                Display[2].append(string)
 
     #Clean the frame
 
@@ -539,13 +556,13 @@ def FillCanvasWarning():
 
     label = tk.Label(frame2, text=str(len(Display[0])+len(Display[1])+len(Display[2])) + " warning(s):", fg="red")
     label.grid(row=1, column=0, sticky="w")
-    
+
     #Display the Warnings
-    
+
     Column = 1
     Row = 1
     MaxColumn=2
-    
+
     for index in range (0,len(Display)):
         Column = 1
         for i in range(1,len(Display[index])+1):
@@ -558,12 +575,12 @@ def FillCanvasWarning():
                Row +=1
         if(index+1<len(Display)):
             if (len(Display[index+1])>0):
-                Row +=1 
+                Row +=1
                 label = tk.Label(frame2, text="------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------", fg="red")
                 label.grid(row=Row, column=1,columnspan=2, pady=5, sticky="w")
-                Row +=1        
-           
-    
+                Row +=1
+
+
 pass
 
 def ConfigureCanvasStep2(event):
@@ -582,19 +599,19 @@ def RefreshStep1():
     NB_CSS = len(CssPath)                                 # Number of CSS files selected
 
     #Clean the frame
-    
+
     for widget in lfStep1.winfo_children():
         widget.grid_forget()
-    
-    
+
+
     line =0
     TitleCss.grid(row=0, column=0, pady="5")
     line+=1
-    for i in range(0,NB_CSS):    
+    for i in range(0,NB_CSS):
         NewLabel = Label(lfStep1, text="..." + CssPath[i][-40:])
         NewLabel.grid(row=line, column=0)
         line+=1
-    TextCss.set("Insert Path")    
+    TextCss.set("Insert Path")
     entryCss.grid(row=line, column=0, pady="5")
     BrowseCss.grid(row=line, column=1, pady="5")
     line+=1
@@ -613,36 +630,36 @@ def RefreshStep1():
     BrowseHtml.grid(row=line, column=1, pady="5")
     line+=1
     AddHtml.grid(row=line, column=0, pady="5")
-    
+
     lfStep1.grid(row=1, column=1, sticky="n s e w")
 pass
-        
+
 def RefreshStep2(event):
 
     # if change Modifier Group Selection
-    
-    if(CBStep2State[5] != CBModifier.get()):          
-             
+
+    if(CBStep2State[5] != CBModifier.get()):
+
         #Apply the corresponding selection setting (none/default/current/all) when Modifier group is changed by the user
-        
-        if(CBModifier.get() == Modifier1Name):# Default: if Element    
+
+        if(CBModifier.get() == Modifier1Name):# Default: if Element
             if(CBStep2State[0] != ""):CBSelChoice.set(CBStep2State[0])
             else:CBSelChoice.set(CBStep2State[4])
-        elif(CBModifier.get() == Modifier2Name):# Default: if Class  
+        elif(CBModifier.get() == Modifier2Name):# Default: if Class
             if(CBStep2State[1] != ""):CBSelChoice.set(CBStep2State[1])
             else:CBSelChoice.set(CBStep2State[4])
-        elif(CBModifier.get() == Modifier3Name):# Default: if Id 
+        elif(CBModifier.get() == Modifier3Name):# Default: if Id
             if(CBStep2State[2] != ""):CBSelChoice.set(CBStep2State[2])
             else:CBSelChoice.set(CBStep2State[4])
-        elif(CBModifier.get() == Modifier4Name):# Default: if At-rules 
+        elif(CBModifier.get() == Modifier4Name):# Default: if At-rules
             if(CBStep2State[3] != ""):CBSelChoice.set(CBStep2State[3])
             else:CBSelChoice.set(CBStep2State[4])
-       
+
         CBStep2State[5] = CBModifier.get()
-     
+
     # if change Selection Mode
-    
-    else:         
+
+    else:
         if((CBStep2State[0] != CBSelChoice.get()) and (CBModifier.get() == Modifier1Name)):CBStep2State[0] = CBSelChoice.get()
         elif((CBStep2State[1] != CBSelChoice.get()) and (CBModifier.get() == Modifier2Name)):CBStep2State[1] = CBSelChoice.get()
         elif((CBStep2State[2] != CBSelChoice.get()) and (CBModifier.get() == Modifier3Name)):CBStep2State[2] = CBSelChoice.get()
@@ -650,8 +667,8 @@ def RefreshStep2(event):
 
 
     # Update the display
-    
-    FillCanvasStep2()        
+
+    FillCanvasStep2()
     frame.bind("<Configure>", ConfigureCanvasStep2)
     myscrollbar.pack(side="right", fill="y")
     canvas.pack(side="left")
@@ -674,47 +691,53 @@ def RefreshWarning():
     frame2.bind("<Configure>", ConfigureCanvasWarning)
     myscrollbar2.pack(side="right", fill="y")
     CanvasWarning.pack(side="bottom")
-    ModifierWorkspaceWarning.pack(side="bottom")  
+    ModifierWorkspaceWarning.pack(side="bottom")
     TopBarPack.pack(side="top")
-    
+
     TitleTBP.grid(row=0, column=1)
     EntrySelector.grid(row=0, column=2)
     RefreshButton.grid(row=0, column=3)
-    
+
     FillCanvasWarning()
-    
+
     frame4.pack()
     lfWarning.grid(row=2, column=1, columnspan=10, sticky="n s e w")
-    
+
 pass
 
 def RefreshStep3():
-    
+
     Generate.grid(row=0, column=0, pady="30")
     GenerateDotMin.grid(row=1, column=0, pady="30")
     Reset.grid(row=2, column=0, pady="30")
     lfStep3.grid(row=1, column=3, sticky="n s")
-    
+
 pass
 
 def GetWindowData(g):
     r = [i for i in range(0, len(g)) if not g[i].isdigit()]
     return [int(g[0:r[0]]), int(g[r[0] + 1:r[1]]), int(g[r[1] + 1:r[2]]), int(g[r[2] + 1:])]
- 
+
 pass
 
 def ReadFile():
-    
+
     #Unexpected action handler
-    
+
     if(len(CssPath)==0):
-        tkinter.messagebox.showerror ("Error: No CSS","Please add a CSS file")
+        try:
+            tkinter.messagebox.showerror ("Error: No CSS","Please add a CSS file")
+        except:
+            tkMessageBox.showerror ("Error: No CSS","Please add a CSS file")
         return
     elif(len(HtmlPath)==0):
-        tkinter.messagebox.showerror ("Error: No HTML","Please add an HTML file")
+        try:
+            tkinter.messagebox.showerror ("Error: No HTML","Please add an HTML file")
+        except:
+            tkMessageBox.showerror ("Error: No HTML","Please add an HTML file")
         return
     else:
-        
+
         Error="The following files are unvalid:"
         DefaultErrorLenght=len(Error)
         RemoveCss=[]
@@ -726,15 +749,15 @@ def ReadFile():
         for i in RemoveCss[::-1]:
             CssPath.remove(CssPath[i])
         RemoveCss=[]
-        
+
         for i in range(0,len(HtmlPath)):
             if(os.path.isfile(str(HtmlPath[i]))==False):
                 Error+="\n..."+HtmlPath[i][-40:]+": Not Found"+"\n"
                 RemoveHtml.append(i)
         for i in RemoveHtml[::-1]:
             HtmlPath.remove(HtmlPath[i])
-        RemoveHtml=[]               
-                
+        RemoveHtml=[]
+
         for i in range(0,len(CssPath)):
             if(CssPath[i][-4]!="." or CssPath[i][-3]!="c" or CssPath[i][-2]!="s" or CssPath[i][-1]!="s"):
                 Error+="\n..."+CssPath[i][-40:] +": Not CSS"+"\n"
@@ -742,7 +765,7 @@ def ReadFile():
         for i in RemoveCss[::-1]:
             CssPath.remove(CssPath[i])
         RemoveCss=[]
-        
+
         for i in range(0,len(HtmlPath)):
             if(HtmlPath[i][-5]!="." or HtmlPath[i][-4]!="h" or HtmlPath[i][-3]!="t" or HtmlPath[i][-2]!="m" or HtmlPath[i][-1]!="l"):
                 Error+="\n..."+HtmlPath[i][-40:]+": Not HTML"+"\n"
@@ -750,58 +773,61 @@ def ReadFile():
         for i in RemoveHtml[::-1]:
             HtmlPath.remove(HtmlPath[i])
         RemoveHtml=[]
-        
+
         for i in range(0,len(CssPath)):
             if(CssPath.count(CssPath[i])>1):
                 Error+="\n..."+CssPath[i][-40:]+": Found Multiple times"+"\n"
                 RemoveCss.append(i)
-                
+
         for i in RemoveCss[::-1]:
             del CssPath[i]
         RemoveCss=[]
-        
+
         for i in range(0,len(HtmlPath)):
             if(HtmlPath.count(HtmlPath[i])>1):
                 Error+="\n..."+HtmlPath[i][-40:]+": Found Multiple times"+"\n"
                 RemoveHtml.append(i)
-        
+
         for i in RemoveHtml[::-1]:
             del HtmlPath[i]
         RemoveHtml=[]
-        
+
         if(len(Error)>DefaultErrorLenght):
-            tkinter.messagebox.showerror ("Error: Incorrect File(s)",Error)
+            try:
+                tkinter.messagebox.showerror ("Error: Incorrect File(s)",Error)
+            except:
+                tkMessageBox.showerror ("Error: Incorrect File(s)",Error)
             RefreshStep1()
             Read.grid(row=len(CssPath) + len(HtmlPath) + 9, column=0, pady="5")
-            return   
-    
-        
+            return
+
+
     # Disable path modifications
-    
+
     BrowseCss.configure(state="disabled")
     BrowseHtml.configure(state="disabled")
     Read.configure(state="disabled")
     entryHtml.configure(state="disabled")
     entryCss.configure(state="disabled")
-    
+
     #Read the files
-    
+
     ReadCSS()
     ReadHTML()
     Optimize()
-    
-    #Display Step 2 
-        
+
+    #Display Step 2
+
     RefreshStep2("")
-    
+
     #Display warning
-    
+
     RefreshWarning()
-    
-    #Display Step 3 
-    
+
+    #Display Step 3
+
     RefreshStep3()
-    
+
     # Move the window to the center of the screen
     """
     Window.update_idletasks()
@@ -816,7 +842,7 @@ def ReadFile():
 pass
 
 def ReadHTML():
-    for i in range(0, len(HtmlPath)):                        #Reads all the HTML files   
+    for i in range(0, len(HtmlPath)):                        #Reads all the HTML files
         HtmlFile = open(HtmlPath[i], "r")
         Data = HtmlFile.read()
         HtmlFile.close
@@ -825,15 +851,15 @@ def ReadHTML():
         Data = Data.replace("  ", " ")
         Data = Data.replace("   ", " ")
         Data = Data.replace("    ", "")
-        
-        while(len(Data) > 0):                                #Current file treatment loop           
+
+        while(len(Data) > 0):                                #Current file treatment loop
 
             if(Data[0] == '<' and Data[1] == '!' and Data[2] == '-' and Data[3] == '-'):#delete the comments
                 while(1):
                     if (Data[0] == '-' and Data[1] == '-' and Data[2] == '>'):
                         break
                     else:Data = Data[1:]
-                
+
             elif (Data[0] == "<" and Data[1] != "/"):#if an HTML tag is found
                 tmpdata = []
                 Data = Data[1:]# delete < from name
@@ -841,7 +867,7 @@ def ReadHTML():
                     tmpdata.append(Data[0])
                     Data = Data[1:]
                 HtmlTable[0].append(''.join(tmpdata))
-                       
+
                 while(Data[0] != '>'):                       #as long as the tag is not fully read
                     tmpdata = []
 
@@ -864,7 +890,7 @@ def ReadHTML():
                                 break
                             else:#get the class name
                                 tmpdata.append(Data[0])
-                                Data = Data[1:]       
+                                Data = Data[1:]
                         Data = Data[1:]
 
                     elif(Data[0] == 'i' and Data[1] == 'd'and (Data[2] == " "or Data[2] == "=")):#if id tag is found
@@ -886,16 +912,16 @@ def ReadHTML():
                                 break
                             else:#get the class name
                                 tmpdata.append(Data[0])
-                                Data = Data[1:]       
+                                Data = Data[1:]
                         Data = Data[1:]
-                        
+
                     elif(Data[0] == '"'):# prevent misinterpretation when "id" or "class" is included in a definition
                         Data = Data[1:]
                         while(Data[0] != '"'):
                             Data = Data[1:]
                         Data = Data[1:]
                     else:Data = Data[1:]
-                
+
             elif(Data[0] == 'f' and Data[1] == 'u' and Data[2] == 'n' and Data[3] == 'c' and Data[4] == 't' and Data[5] == 'i'and Data[6] == 'o'and Data[7] == 'n'):
                 flag = 0
                 while(Data[0] != '{'):#push inside the id tag to get data
@@ -905,17 +931,17 @@ def ReadHTML():
                 while(flag == 0):#delete the function
                     if (Data[0] == '{'):flag += 1
                     if (Data[0] == '}'):flag -= 1
-                
-                    
-                    
+
+
+
             else:Data = Data[1:]
-    
+
 pass
 
 def ReadCSS():
-    
+
     for i in range(0, len(CssPath)):                        # Reads all the CSS files
-        
+
         CssFile = open(CssPath[i], "r")
         Data = CssFile.read()
         CssFile.close
@@ -933,10 +959,10 @@ def ReadCSS():
                     Data = Data[1:]
                 Data = Data[1:]
                 Data = Data[1:]
-            
+
             elif (Data[0] == "@"):                           # this is an At-Rule
                 NbBraceOp = 1
-                
+
                 while(True):#get the name of the Rule
                     NameNewCssData += Data[0]
                     Data = Data[1:]
@@ -944,10 +970,10 @@ def ReadCSS():
                         break
                     if (Data[0] == "{"):
                         break
-                        
+
                 NewAtRule = AtRuleData(Modifier4Name, [''.join(NameNewCssData)], "", [0])
-                                
-                while(NbBraceOp > 0):#get modifiers inside the At-Rule      
+
+                while(NbBraceOp > 0):#get modifiers inside the At-Rule
                     NameNewCssDataForAtRule = []
                     DataNewCssDataForAtRule = []
                     Data = Data[1:]
@@ -970,27 +996,27 @@ def ReadCSS():
                             NameTable.append(''.join(NameNewCssDataForAtRule).strip())
                             Data = Data[1:]
                             NameNewCssDataForAtRule = []
-                           
+
                     while(True):#getdata
                         DataNewCssDataForAtRule += Data[0]
                         if (Data[0] == "}"):
                             Data = Data[1:]
                             NbBraceOp -= 1
                             break
-                            
+
                         Data = Data[1:]
-                        
+
                     if(( "@" in str(NameTable)) == True):AddToTable(NewAtRule.ModifierTable[3], NameTable, DataNewCssDataForAtRule)
                     elif(( "#" in str(NameTable)) == True):AddToTable(NewAtRule.ModifierTable[2], NameTable, DataNewCssDataForAtRule)
                     elif(( "." in str(NameTable)) == True):AddToTable(NewAtRule.ModifierTable[1], NameTable, DataNewCssDataForAtRule)
                     else:AddToTable(NewAtRule.ModifierTable[0], NameTable, DataNewCssDataForAtRule)
-                    
+
                     if (Data[0] == "}"): # Check if the At-Rule is over
                         NbBraceOp -= 1
-                    
+
                 CssTable[3].append(NewAtRule)
             elif (Data[0] == " " or Data[0] == "}"):
-                Data = Data[1:]                
+                Data = Data[1:]
             else:                             # this is an Element or Class or Id
                 while(True):#getname
                     NameNewCssData += Data[0]
@@ -1004,7 +1030,7 @@ def ReadCSS():
                         NameTable.append(''.join(NameNewCssData).strip())
                         Data = Data[1:]
                         NameNewCssData = []
-                    
+
                 if(len(Data) != 0):
                     while(True):#getdata
                         DataNewCssData += Data[0]
@@ -1012,12 +1038,12 @@ def ReadCSS():
                             Data = Data[1:]
                             break
                         Data = Data[1:]
-                        
-                    if(( "#" in NameTable[0]) == True): 
+
+                    if(( "#" in NameTable[0]) == True):
                         AddToTable(CssTable[2], NameTable, DataNewCssData)
-                    elif(( "." in NameTable[0]) == True): 
+                    elif(( "." in NameTable[0]) == True):
                         AddToTable(CssTable[1], NameTable, DataNewCssData)
-                    else: 
+                    else:
                         AddToTable(CssTable[0], NameTable, DataNewCssData)
 
 pass
@@ -1033,17 +1059,17 @@ def Optimize():
     FUND_MULTIPLE_TIME=2
     NOT_OFTENLY_FOUND=3
     Case=[Defined,NotDefined,FoundMultipleTime,NotUsedOftenly]
-    M1DataHTMLReduced = list(set(HtmlTable[0])) 
+    M1DataHTMLReduced = list(set(HtmlTable[0]))
     M2DataHTMLReduced = list(set(HtmlTable[1]))
     M3DataHTMLReduced = list(set(HtmlTable[2]))
-    HtmlTableReduced = [M1DataHTMLReduced, M2DataHTMLReduced, M3DataHTMLReduced]  
+    HtmlTableReduced = [M1DataHTMLReduced, M2DataHTMLReduced, M3DataHTMLReduced]
     M1NBIT = []
     M2NBIT = []
     M3NBIT = []
     NbItTable = [M1NBIT,M2NBIT,M3NBIT]
 
     #Get NbIt
-    
+
     for ColumnInHtml in range(0,len(HtmlTable)):                                        # define position in HTML table
         for LineInHtmlReduced in range(0,len(HtmlTableReduced[ColumnInHtml])):
             NbItTable[ColumnInHtml].append(HtmlTable[ColumnInHtml].count(HtmlTableReduced[ColumnInHtml][LineInHtmlReduced]))
@@ -1052,15 +1078,15 @@ def Optimize():
 
     for ColumnInHtml in range(0,len(HtmlTableReduced)):                                    # define position in HTML table
         for LineInHtml in range(0,len(HtmlTableReduced[ColumnInHtml])):
-        
+
             ColumnInCss = ColumnInHtml                                              # define position in CSS table
             for LineInCss in range(0,len(CssTable[ColumnInCss])):
-                
+
                 if(HtmlTableReduced[ColumnInHtml][LineInHtml] in CssTable[ColumnInCss][LineInCss].name):
-                    
+
                     CssTable[ColumnInCss][LineInCss].nbit[CssTable[ColumnInCss][LineInCss].name.index(HtmlTableReduced[ColumnInHtml][LineInHtml])]=NbItTable[ColumnInHtml][LineInHtml]
                     CssTable[ColumnInCss][LineInCss].selectmode[CssTable[ColumnInCss][LineInCss].name.index(HtmlTableReduced[ColumnInHtml][LineInHtml])].set(True)
-                    
+
                     if((HtmlTableReduced[ColumnInHtml][LineInHtml] in Case[FOUND]) ==False):
                         Case[FOUND].append(HtmlTableReduced[ColumnInHtml][LineInHtml])
                     elif((HtmlTableReduced[ColumnInHtml][LineInHtml] in Case[FUND_MULTIPLE_TIME])==False):
@@ -1070,25 +1096,25 @@ def Optimize():
             if((HtmlTableReduced[ColumnInHtml][LineInHtml] in Case[NOT_FOUND])==False):
                 if((HtmlTableReduced[ColumnInHtml][LineInHtml] in Case[FOUND])== False):
                     Case[NOT_FOUND].append(HtmlTableReduced[ColumnInHtml][LineInHtml])
-    
-    
-    #Check if modifier is common    
-    
+
+
+    #Check if modifier is common
+
     for column in range(0,len(CssTable)): #check modifier1 table then modifier2 table and then modifier3 table
         for line in range(0,len(CssTable[column])):# reads all the htmlTable
-            
+
             for NbItIndex in range(0,len(CssTable[column][line].nbit)):
                 if(CssTable[column][line].nbit[NbItIndex] <=(2*len(HtmlPath))and CssTable[column][line].nbit[NbItIndex]>0):
-                    
+
                     tmp=""
                     tmp+= CssTable[column][line].name[NbItIndex]
-                    Case[NOT_OFTENLY_FOUND][tmp] =  str(CssTable[column][line].nbit[NbItIndex]) 
-    
+                    Case[NOT_OFTENLY_FOUND][tmp] =  str(CssTable[column][line].nbit[NbItIndex])
+
     #Check in Column 4 in CssTable
-    
+
     for ColumnInHtml in range(0,len(HtmlTableReduced)):                                    # define position in HTML table
         for LineInHtml in range(0,len(HtmlTableReduced[ColumnInHtml])):
-            
+
             ColumnInCss = 3                                                         # define position in CSS table
             for LineInCss in range(0,len(CssTable[ColumnInCss])):
 
@@ -1096,7 +1122,7 @@ def Optimize():
                 for LineInAtRule in range(0,len(CssTable[ColumnInCss][LineInCss].ModifierTable[ColumnInAtRule])):
 
                     if(HtmlTableReduced[ColumnInHtml][LineInHtml] in CssTable[ColumnInCss][LineInCss].ModifierTable[ColumnInAtRule][LineInAtRule].name):
-                        
+
                         CssTable[ColumnInCss][LineInCss].ModifierTable[ColumnInAtRule][LineInAtRule].nbit[CssTable[ColumnInCss][LineInCss].ModifierTable[ColumnInAtRule][LineInAtRule].name.index(HtmlTableReduced[ColumnInHtml][LineInHtml])]=NbItTable[ColumnInHtml][LineInHtml]
                         CssTable[ColumnInCss][LineInCss].ModifierTable[ColumnInAtRule][LineInAtRule].selectmode[CssTable[ColumnInCss][LineInCss].ModifierTable[ColumnInAtRule][LineInAtRule].name.index(HtmlTableReduced[ColumnInHtml][LineInHtml])].set(True)
                         CssTable[ColumnInCss][LineInCss].nbit[0]+=1
@@ -1112,13 +1138,13 @@ def Optimize():
             if ((HtmlTableReduced[ColumnInHtml][LineInHtml] in Case[FOUND]) ==False):
                 if((HtmlTableReduced[ColumnInHtml][LineInHtml] in Case[NOT_FOUND])== False):
                     Case[NOT_FOUND].append(HtmlTableReduced[ColumnInHtml][LineInHtml])
-      
-    
+
+
     #Check if modifier is common
-    
+
     ColumnInCss = 3                                                                           # define position in CSS file
     for LineInCss in range(0,len(CssTable[ColumnInCss])):
-                
+
         for ColumnInAtRule in range(0,len(CssTable[ColumnInCss][LineInCss].ModifierTable)):   # define position in AtRule
             for LineInAtRule in range(0,len(CssTable[ColumnInCss][LineInCss].ModifierTable[ColumnInAtRule])):
 
@@ -1130,17 +1156,17 @@ def Optimize():
 
 
     #fill the warning table
-    
+
     for i in range(0,len(Case[NOT_FOUND])):
         WarningList[0].append(Case[NOT_FOUND][i])
     for i in range(0,len(Case[FUND_MULTIPLE_TIME])):
         WarningList[1].append(Case[FUND_MULTIPLE_TIME][i])
-  
+
         WarningList[2]=Case[NOT_OFTENLY_FOUND]
 
 pass
 def AddToTable(Table, NameNewCssData, DataNewCssData):
-    NewCssData = CssData("Undefined",NameNewCssData, ''.join(DataNewCssData), [0]*len(NameNewCssData))      
+    NewCssData = CssData("Undefined",NameNewCssData, ''.join(DataNewCssData), [0]*len(NameNewCssData))
     if(("#" in NameNewCssData)==True):
         NewCssData.type = Modifier3Name
         Table.append(NewCssData)
@@ -1189,7 +1215,7 @@ Read = Button(lfStep1, text="Read the CSS file", command=ReadFile)
 
 #Definition for Step 2
 
-    #            Parent             ----------------------->                 Children   
+    #            Parent             ----------------------->                 Children
     #Managed by : grid   |   grid   |      pack        |  pack |  none |    grid    |
     #           |  Id:1  |   Id:2   |      Id:3        |  Id:4 |  Id:5 |      Id:6  |
                 #lfStep2->lfModifier->ModifierWorkspace->canvas->frame->Checkbuttons
@@ -1240,11 +1266,11 @@ canvas.configure(width=1000, height=200)
 
 #Definition for Warning
 
-    #            Parent             ----------------------->                       Children   
+    #            Parent             ----------------------->                       Children
     #Managed by :  grid    | none |         grid            |   pack/grid  |  none | grid  |
     #           |  Id:1    | Id:2 |         Id:3            |     Id:4     |  Id:5 | Id:6  |
                 #lfWarning->frame4->ModifierWorkspaceWarning->CanvasWarning->frame2->Labels
-                #                 \                           \myscrollbar2                 
+                #                 \                           \myscrollbar2
                 #                  \______TopBarPack--------->TitleTBP
                 #                                           \\EntrySelector
                 #                                            \RefreshButton
@@ -1281,7 +1307,7 @@ frame2 = Frame(CanvasWarning)
 CanvasWarning.create_window((0, 0), window=frame2, anchor='nw')
 CanvasWarning.configure(width=1000, height=200)
 
-    
+
 #Definition for Step 3
 
 
