@@ -10,19 +10,18 @@ __date__ = "$29 oct. 2015 10:35:15$"
 #Import
 
 try:
-    import os
     import tkinter as tk
     from tkinter.filedialog import *
     from tkinter.ttk import *
     import tkinter.messagebox
 except:
-    import os
     import Tkinter as tk
     from tkFileDialog import *
     from ttk import *
     import tkMessageBox
     from Tkinter import *
-
+import platform
+import os
 
     # Needed for CheckButton
 
@@ -124,12 +123,18 @@ pass
 def Reset():
 
     # re enable path modifications
-
-    BrowseCss.configure(state="active")
-    BrowseHtml.configure(state="active")
-    Read.configure(state="active")
-    entryHtml.configure(state="active")
-    entryCss.configure(state="active")
+    try:
+        BrowseCss.configure(state="active")
+        BrowseHtml.configure(state="active")
+        Read.configure(state="active")
+        entryHtml.configure(state="active")
+        entryCss.configure(state="active")
+    except:
+        BrowseCss.configure(state="normal")
+        BrowseHtml.configure(state="normal")
+        Read.configure(state="normal")
+        entryHtml.configure(state="normal")
+        entryCss.configure(state="normal")
 
     # Reset display
 
@@ -466,7 +471,7 @@ def FillCanvasStep2():
                 Column = ColumnStart
                 Row +=1
         ButtonList[i].checkbutton.grid(row=Row, column=Column, sticky="w")
-        frame.grid_columnconfigure(Column,minsize=(WidthCBModifier/ModifierPerLine))
+        frame.grid_columnconfigure(Column,minsize=((frame.winfo_width()-28)/ModifierPerLine))
         Column+=1
 
     if (len(ToDisplay)<2):
@@ -518,7 +523,7 @@ def FillCanvasWarning():
                 InNoNamed = 1
 
         if(InNoContaining+InNoNamed==0):
-            string ="Warning: " + str(WarningList[0][index]) +" is not defined in any of the selected CSS files"
+            string =str(WarningList[0][index]) +" is not defined in any of the selected CSS files"
             Display[0].append(string)
 
      #Error Defined multiple times: Check if displayed or not
@@ -535,7 +540,7 @@ def FillCanvasWarning():
                 InNoNamed = 1
 
         if(InNoContaining+InNoNamed==0):
-            string = "Warning: " + str(WarningList[1][index]) + " is defined more than one time, compress it in one definiton may lighten your CSS file"
+            string = str(WarningList[1][index]) + " is defined more than one time, compress it in one definiton may lighten your CSS file"
             Display[1].append(string)
 
     #Error not oftenly used: Check if displayed or not
@@ -552,7 +557,7 @@ def FillCanvasWarning():
                     InNoNamed = 1
 
             if(InNoContaining+InNoNamed==0):
-                string = "Warning: {} is only used {} time(s), removing it's definiton may lighten your CSS file".format(key,Iteration)
+                string = "{} is only used {} time(s), removing it's definiton may lighten your CSS file".format(key,Iteration)
                 Display[2].append(string)
 
     #Clean the frame
@@ -562,8 +567,10 @@ def FillCanvasWarning():
 
     #Display the number of errors
 
-    label = tk.Label(frame2, text=str(len(Display[0])+len(Display[1])+len(Display[2])) + " warning(s):", fg="red")
-    label.grid(row=1, column=0, sticky="w")
+    ModifierWorkspaceWarning.configure(text=str(len(Display[0])+len(Display[1])+len(Display[2])) + " warning(s):")
+
+    #label = tk.Label(frame2, text=str(len(Display[0])+len(Display[1])+len(Display[2])) + " warning(s):", fg="red")
+    #label.grid(row=1, column=0, sticky="w")
 
     #Display the Warnings
 
@@ -592,13 +599,13 @@ def FillCanvasWarning():
 pass
 
 def ConfigureCanvasStep2(event):
-    global WidthCBModifier
-    global HeightCBModifier
+    WidthCBModifier = (frame.winfo_width()-28)
+    HeightCBModifier = 220
     canvas.configure(scrollregion=canvas.bbox("all"), width=WidthCBModifier, height=HeightCBModifier)
 pass
 def ConfigureCanvasWarning(event):
-    global WidthWarning
-    global HeightWarning
+    WidthWarning = (frame4.winfo_width() -28)#dont ask me why 28, if<28 generates an infinite loop
+    HeightWarning = 300
     CanvasWarning.configure(scrollregion=CanvasWarning.bbox("all"), width=WidthWarning, height=HeightWarning)
 pass
 
@@ -616,7 +623,7 @@ def RefreshStep1():
     TitleCss.grid(row=0, column=0, pady="5")
     line+=1
     for i in range(0,NB_CSS):
-        NewLabel = Label(lfStep1, text="..." + CssPath[i][-40:])
+        NewLabel = Label(lfStep1, text="..." + CssPath[i][int(-40*coef):])
         NewLabel.grid(row=line, column=0)
         line+=1
     TextCss.set("Insert Path")
@@ -630,7 +637,7 @@ def RefreshStep1():
     TitleHtml.grid(row=line, column=0, pady="5")
     line+=1
     for i in range(0,NB_HTML):
-        NewLabel = Label(lfStep1, text="..." + HtmlPath[i][-40:])
+        NewLabel = Label(lfStep1, text="..." + HtmlPath[i][int(-40*coef):])
         NewLabel.grid(row=line, column=0)
         line+=1
     TextHtml.set("Insert Path")
@@ -696,6 +703,9 @@ def RefreshStep2(event):
 pass
 
 def RefreshWarning():
+    frame4.pack(fill="both")
+    #WidthWarning = 1200
+    #HeightWarning = 200
     frame2.bind("<Configure>", ConfigureCanvasWarning)
     myscrollbar2.pack(side="right", fill="y")
     CanvasWarning.pack(side="bottom")
@@ -708,7 +718,7 @@ def RefreshWarning():
 
     FillCanvasWarning()
 
-    frame4.pack()
+
     lfWarning.grid(row=2, column=1, columnspan=10, sticky="n s e w")
 
 pass
@@ -1193,6 +1203,10 @@ Window = Tk()
 Window.resizable(width=False, height=False)
 Window.title("Microchip CSS Optimizer "+ Version)
 
+if(platform.system()=='Windows'): coef =1
+elif(platform.system()=='Darwin'):coef=0.8
+else:coef=0.6
+
     ###############
     ##DEFINITIONS##
     ###############
@@ -1210,13 +1224,13 @@ Bottom.grid(row=2, column=1)
 
 TitleCss = tk.Label(lfStep1, text="Add a CSS file")
 TextCss = StringVar()
-entryCss = Entry(lfStep1, textvariable=TextCss, width=42, validate='key',validatecommand=EnableAddCss)
+entryCss = Entry(lfStep1, textvariable=TextCss, width=int(42*coef), validate='key',validatecommand=EnableAddCss)
 BrowseCss = Button(lfStep1, text="Browse", command=OpenCSS)
 AddCss = Button(lfStep1, text="Add CSS file", command=AddCSS, state="disable")
 
 TitleHtml = tk.Label(lfStep1, text="Add an HTML file")
 TextHtml = StringVar()
-entryHtml = Entry(lfStep1, textvariable=TextHtml, width=42, validate='key',validatecommand=EnableAddHtml)
+entryHtml = Entry(lfStep1, textvariable=TextHtml, width=int(42*coef), validate='key',validatecommand=EnableAddCss)
 BrowseHtml = Button(lfStep1, text="Browse", command=OpenHTML)
 AddHtml = Button(lfStep1, text="Add HTML file", command=AddHTML, state="disable")
 Read = Button(lfStep1, text="Read the CSS file", command=ReadFile)
@@ -1242,8 +1256,6 @@ ModifierList = (Modifier1Name, Modifier2Name, Modifier3Name, Modifier4Name)
 CBModifier = Combobox(lfStep2, values=ModifierList, state='readonly')
 CBModifier.set(ModifierList[0])
 CBModifier.bind('<<ComboboxSelected>>', RefreshStep2)
-WidthCBModifier = 800   # Only those values have an impact on the size of lfModifier
-HeightCBModifier = 220
 ChoiceList = ("None", "Default", "Current", "All")
 CBSelChoice = Combobox(lfStep2, values=ChoiceList, state='readonly')
 CBSelChoice.set(CBStep2State[4])
@@ -1252,7 +1264,7 @@ ChoiceList2 = ("View All","Selected Only","Not Selected Only")
 CBViewChoice = Combobox(lfStep2, values=ChoiceList2, state='readonly')
 CBViewChoice.set(ChoiceList2[0])
 CBViewChoice.bind('<<ComboboxSelected>>', RefreshStep2)
-SearchBar = Entry(lfStep2, width=20)
+SearchBar = Entry(lfStep2, width=int(20*coef))
 CallRefreshStep2 = lambda: RefreshStep2("")
 BSearch = Button(lfStep2, text="Search", command=CallRefreshStep2)
 #############################Id:3 definition########################################
@@ -1275,7 +1287,7 @@ canvas.configure(width=1000, height=200)
 #Definition for Warning
 
     #            Parent             ----------------------->                       Children
-    #Managed by :  grid    | none |         grid            |   pack/grid  |  none | grid  |
+    #Managed by :  grid    | pack |         grid            |   pack/grid  |  none | grid  |
     #           |  Id:1    | Id:2 |         Id:3            |     Id:4     |  Id:5 | Id:6  |
                 #lfWarning->frame4->ModifierWorkspaceWarning->CanvasWarning->frame2->Labels
                 #                 \                           \myscrollbar2
@@ -1290,10 +1302,8 @@ frame4 = Frame(lfWarning)
 
 #############################Id:3 definition########################################
 
-ModifierWorkspaceWarning = tk.Frame(frame4)
+ModifierWorkspaceWarning = tk.LabelFrame(frame4)
 ModifierWorkspaceWarning.grid(row=1, column=2, sticky="n s e w")
-WidthWarning = 1200
-HeightWarning = 200
 TopBarPack = Frame(frame4)
 
 #############################Id:4 definition########################################
@@ -1306,7 +1316,7 @@ TopBarPack = Frame(frame4)
 TitleTBP = tk.Label(TopBarPack, text="Hide Warnings: Name or PartName* are valid. Space required between elements")
 TextSelector = StringVar()
 TextSelector.set("!DOCTYPE head meta div script title html body")
-EntrySelector = Entry(TopBarPack, textvariable=TextSelector, width=100)
+EntrySelector = Entry(TopBarPack, textvariable=TextSelector, width=int(100*coef))
 RefreshButton = Button(TopBarPack, text="Refresh", command=RefreshWarning)
 
 #############################Id:5 definition########################################
