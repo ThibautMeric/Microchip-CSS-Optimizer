@@ -1202,7 +1202,7 @@ Window = Tk()
 
 Window.resizable(width=False, height=False)
 Window.title("Microchip CSS Optimizer "+ Version)
-
+#Window.configure(bg='gray90')
 if(platform.system()=='Windows'): coef =1
 elif(platform.system()=='Darwin'):coef=0.8
 else:coef=0.6
@@ -1213,7 +1213,7 @@ else:coef=0.6
 
 #Definition for the Global WorkSpace
 
-lfStep1 = tk.LabelFrame(Window, text="Step1:",bg='gray90')
+lfStep1 = tk.LabelFrame(Window, text="Step1:")
 lfStep2 = tk.LabelFrame(Window, text="Step2:")
 lfWarning = tk.LabelFrame(Window, text="Warning:")
 lfStep3 = tk.LabelFrame(Window, text="Step3:")
@@ -1224,9 +1224,12 @@ Bottom.grid(row=2, column=1)
 
 TitleCss = tk.Label(lfStep1, text="Add a CSS file")
 TextCss = StringVar()
-entryCss = Entry(lfStep1, textvariable=TextCss, width=int(42*coef), validate='key',validatecommand=EnableAddCss)
-BrowseCss = Button(lfStep1, text="Browse", command=OpenCSS)
-AddCss = Button(lfStep1, text="Add CSS file", command=AddCSS, state="disable")
+entryCss = tk.Entry(lfStep1, textvariable=TextCss, width=int(42*coef), validate='key',validatecommand=EnableAddCss)
+entryCss.configure(highlightthickness=0)
+BrowseCss = tk.Button(lfStep1, text="Browse", command=OpenCSS)
+BrowseCss.configure(highlightthickness=0)
+AddCss = tk.Button(lfStep1, text="Add CSS file", command=AddCSS, state="disable")
+AddCss.configure(highlightthickness=0)
 
 TitleHtml = tk.Label(lfStep1, text="Add an HTML file")
 TextHtml = StringVar()
