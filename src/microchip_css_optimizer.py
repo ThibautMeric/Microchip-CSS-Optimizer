@@ -12,12 +12,12 @@ __date__ = "$29 oct. 2015 10:35:15$"
 try:
     import tkinter as tk
     from tkinter.filedialog import *
-    from tkinter.ttk import *
+    import tkinter.ttk as ttk
     import tkinter.messagebox
 except:
     import Tkinter as tk
     from tkFileDialog import *
-    from ttk import *
+    import ttk as ttk
     import tkMessageBox
     from Tkinter import *
 import platform
@@ -1202,7 +1202,9 @@ Window = Tk()
 
 Window.resizable(width=False, height=False)
 Window.title("Microchip CSS Optimizer "+ Version)
-#Window.configure(bg='gray90')
+combostyle = ttk.Style()
+combostyle.theme_create('combostyle', parent='alt',settings = {'TCombobox':{'configure':{'selectbackground': ''}}})
+combostyle.theme_use('combostyle')
 if(platform.system()=='Windows'): coef =1
 elif(platform.system()=='Darwin'):coef=0.8
 else:coef=0.6
@@ -1225,11 +1227,11 @@ Bottom.grid(row=2, column=1)
 TitleCss = tk.Label(lfStep1, text="Add a CSS file")
 TextCss = StringVar()
 entryCss = tk.Entry(lfStep1, textvariable=TextCss, width=int(42*coef), validate='key',validatecommand=EnableAddCss)
-entryCss.configure(highlightthickness=0)
+#entryCss.configure(highlightthickness=0)
 BrowseCss = tk.Button(lfStep1, text="Browse", command=OpenCSS)
-BrowseCss.configure(highlightthickness=0)
+#BrowseCss.configure(highlightthickness=0)
 AddCss = tk.Button(lfStep1, text="Add CSS file", command=AddCSS, state="disable")
-AddCss.configure(highlightthickness=0)
+#AddCss.configure(highlightthickness=0)
 
 TitleHtml = tk.Label(lfStep1, text="Add an HTML file")
 TextHtml = StringVar()
@@ -1256,15 +1258,15 @@ Read = Button(lfStep1, text="Read the CSS file", command=ReadFile)
 lfModifier = tk.LabelFrame(lfStep2)
 TitleStep2 = Label(lfStep2, text="Select the desired definition to add to your CSS")
 ModifierList = (Modifier1Name, Modifier2Name, Modifier3Name, Modifier4Name)
-CBModifier = Combobox(lfStep2, values=ModifierList, state='readonly')
+CBModifier = ttk.Combobox(lfStep2, values=ModifierList, state='readonly')
 CBModifier.set(ModifierList[0])
 CBModifier.bind('<<ComboboxSelected>>', RefreshStep2)
 ChoiceList = ("None", "Default", "Current", "All")
-CBSelChoice = Combobox(lfStep2, values=ChoiceList, state='readonly')
+CBSelChoice = ttk.Combobox(lfStep2, values=ChoiceList, state='readonly')
 CBSelChoice.set(CBStep2State[4])
 CBSelChoice.bind('<<ComboboxSelected>>', RefreshStep2)
 ChoiceList2 = ("View All","Selected Only","Not Selected Only")
-CBViewChoice = Combobox(lfStep2, values=ChoiceList2, state='readonly')
+CBViewChoice = ttk.Combobox(lfStep2, values=ChoiceList2, state='readonly')
 CBViewChoice.set(ChoiceList2[0])
 CBViewChoice.bind('<<ComboboxSelected>>', RefreshStep2)
 SearchBar = Entry(lfStep2, width=int(20*coef))
