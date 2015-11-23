@@ -471,7 +471,7 @@ def FillCanvasStep2():
                 Column = ColumnStart
                 Row +=1
         ButtonList[i].checkbutton.grid(row=Row, column=Column, sticky="w")
-        frame.grid_columnconfigure(Column,minsize=((frame.winfo_width()-28)/ModifierPerLine))
+        frame.grid_columnconfigure(Column,minsize=(frame.winfo_width()/ModifierPerLine))
         Column+=1
 
     if (len(ToDisplay)<2):
@@ -599,12 +599,12 @@ def FillCanvasWarning():
 pass
 
 def ConfigureCanvasStep2(event):
-    WidthCBModifier = (frame.winfo_width()-28)
+    WidthCBModifier = 750
     HeightCBModifier = 220
     canvas.configure(scrollregion=canvas.bbox("all"), width=WidthCBModifier, height=HeightCBModifier)
 pass
 def ConfigureCanvasWarning(event):
-    WidthWarning = (frame4.winfo_width() -28)#dont ask me why 28, if<28 generates an infinite loop
+    WidthWarning = 1200
     HeightWarning = 300
     CanvasWarning.configure(scrollregion=CanvasWarning.bbox("all"), width=WidthWarning, height=HeightWarning)
 pass
