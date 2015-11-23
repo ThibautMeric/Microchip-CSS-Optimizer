@@ -599,13 +599,13 @@ def FillCanvasWarning():
 pass
 
 def ConfigureCanvasStep2(event):
-    WidthCBModifier = 750
-    HeightCBModifier = 220
+    WidthCBModifier = 750*coefwindow
+    HeightCBModifier = 220*coefwindow
     canvas.configure(scrollregion=canvas.bbox("all"), width=WidthCBModifier, height=HeightCBModifier)
 pass
 def ConfigureCanvasWarning(event):
-    WidthWarning = 1200
-    HeightWarning = 300
+    WidthWarning = 1200*coefwindow
+    HeightWarning = 300*coefwindow
     CanvasWarning.configure(scrollregion=CanvasWarning.bbox("all"), width=WidthWarning, height=HeightWarning)
 pass
 
@@ -1202,9 +1202,15 @@ Window = Tk()
 
 Window.resizable(width=False, height=False)
 Window.title("Microchip CSS Optimizer "+ Version)
-if(platform.system()=='Windows'): coef =1
-elif(platform.system()=='Darwin'):coef=0.8
-else:coef=0.6
+if(platform.system()=='Windows'):
+    coef =1
+    coefwindow=1
+elif(platform.system()=='Darwin'):
+    coef=0.72
+    coefwindow=1.1
+else:
+    coef=0.6
+    coefwindow=1.4
 
     ###############
     ##DEFINITIONS##
@@ -1235,7 +1241,7 @@ TextHtml = StringVar()
 entryHtml = tk.Entry(lfStep1, textvariable=TextHtml, width=int(42*coef), validate='key',validatecommand=EnableAddCss)
 BrowseHtml = tk.Button(lfStep1, text="Browse", command=OpenHTML,width=int(10*coef))
 AddHtml = tk.Button(lfStep1, text="Add HTML file", command=AddHTML, state="disable",width=int(15*coef))
-Read = tk.Button(lfStep1, text="Read the CSS file", command=ReadFile,width=int(15*coef))
+Read = tk.Button(lfStep1, text="Read CSS file", command=ReadFile,width=int(15*coef))
 
 #Definition for Step 2
 
