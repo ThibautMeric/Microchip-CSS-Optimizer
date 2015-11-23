@@ -1202,9 +1202,6 @@ Window = Tk()
 
 Window.resizable(width=False, height=False)
 Window.title("Microchip CSS Optimizer "+ Version)
-combostyle = ttk.Style()
-combostyle.theme_create('combostyle', parent='alt',settings = {'TCombobox':{'configure':{'selectbackground': ''}}})
-combostyle.theme_use('combostyle')
 if(platform.system()=='Windows'): coef =1
 elif(platform.system()=='Darwin'):coef=0.8
 else:coef=0.6
@@ -1228,17 +1225,17 @@ TitleCss = tk.Label(lfStep1, text="Add a CSS file")
 TextCss = StringVar()
 entryCss = tk.Entry(lfStep1, textvariable=TextCss, width=int(42*coef), validate='key',validatecommand=EnableAddCss)
 #entryCss.configure(highlightthickness=0)
-BrowseCss = tk.Button(lfStep1, text="Browse", command=OpenCSS)
+BrowseCss = tk.Button(lfStep1, text="Browse", command=OpenCSS,width=int(10*coef))
 #BrowseCss.configure(highlightthickness=0)
-AddCss = tk.Button(lfStep1, text="Add CSS file", command=AddCSS, state="disable")
+AddCss = tk.Button(lfStep1, text="Add CSS file", command=AddCSS, state="disable",width=int(15*coef))
 #AddCss.configure(highlightthickness=0)
 
 TitleHtml = tk.Label(lfStep1, text="Add an HTML file")
 TextHtml = StringVar()
-entryHtml = Entry(lfStep1, textvariable=TextHtml, width=int(42*coef), validate='key',validatecommand=EnableAddCss)
-BrowseHtml = Button(lfStep1, text="Browse", command=OpenHTML)
-AddHtml = Button(lfStep1, text="Add HTML file", command=AddHTML, state="disable")
-Read = Button(lfStep1, text="Read the CSS file", command=ReadFile)
+entryHtml = tk.Entry(lfStep1, textvariable=TextHtml, width=int(42*coef), validate='key',validatecommand=EnableAddCss)
+BrowseHtml = tk.Button(lfStep1, text="Browse", command=OpenHTML,width=int(10*coef))
+AddHtml = tk.Button(lfStep1, text="Add HTML file", command=AddHTML, state="disable",width=int(15*coef))
+Read = tk.Button(lfStep1, text="Read the CSS file", command=ReadFile,width=int(15*coef))
 
 #Definition for Step 2
 
@@ -1334,9 +1331,9 @@ CanvasWarning.configure(width=1000, height=200)
 #Definition for Step 3
 
 
-Generate = Button(lfStep3, text="Generate",command=IsClassic)
-GenerateDotMin = Button(lfStep3, text="Generate .min",command=IsDotMin)
-Reset = Button(lfStep3, text="Select new files",command=Reset)
+Generate = tk.Button(lfStep3, text="Generate",command=IsClassic,width=int(15*coef))
+GenerateDotMin = tk.Button(lfStep3, text="Generate .min",command=IsDotMin,width=int(15*coef))
+Reset = tk.Button(lfStep3, text="Select new files",command=Reset,width=int(15*coef))
 
 
 
