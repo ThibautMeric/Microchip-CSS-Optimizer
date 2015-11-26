@@ -35,9 +35,9 @@ def RefreshStep2(event, Bottom, lfStep2, CBStep2State, ModifierDict, CssTable, B
 
 
     # Update the display
-    
-    
-    FillCanvasStep2(lfStep2, ModifierDict, CssTable, ButtonList, ChoiceList, ChoiceList2)
+
+
+    FillCanvasStep2(lfStep2, ModifierDict, CssTable, ButtonList, ChoiceList, ChoiceList2, WindowSetting)
     CallConfigureCanvasStep2 = lambda event:ConfigureCanvasStep2("", lfStep2,WindowSetting)
     lfStep2.children["lfmodifier"].children["modifierworkspace"].children["canvas"].children["frame"].bind("<Configure>", CallConfigureCanvasStep2)
     lfStep2.children["lfmodifier"].children["modifierworkspace"].children["myscrollbar"].pack(side="right", fill="y")
@@ -55,4 +55,3 @@ def RefreshStep2(event, Bottom, lfStep2, CBStep2State, ModifierDict, CssTable, B
 
 
 pass
-

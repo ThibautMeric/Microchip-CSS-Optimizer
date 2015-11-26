@@ -117,7 +117,7 @@ def FillCanvasWarning(lfWarning,WarningList):
         if(index+1<len(Display)):
             if (len(Display[index+1])>0):
                 Row +=1
-                label = tk.Label(lfWarning.children["frame4"].children["modifierworkspacewarning"].children["canvaswarning"].children["frame2"], text="------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------", fg="red")
+                label = tk.Label(lfWarning.children["frame4"].children["modifierworkspacewarning"].children["canvaswarning"].children["frame2"], text="----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------", fg="red")
                 label.grid(row=Row, column=1,columnspan=2, pady=5, sticky="w")
                 Row +=1
 

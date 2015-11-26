@@ -1,6 +1,7 @@
 from Step2.CheckbuttonExtended import*
+from math import sqrt
 
-def FillCanvasStep2(lfStep2, ModifierDict, CssTable, ButtonList, ChoiceList, ChoiceList2):
+def FillCanvasStep2(lfStep2, ModifierDict, CssTable, ButtonList, ChoiceList, ChoiceList2, WindowSetting):
 
     #definition
 
@@ -48,9 +49,9 @@ def FillCanvasStep2(lfStep2, ModifierDict, CssTable, ButtonList, ChoiceList, Cho
     for i in range(0, len(CssTable[ModifierIndex])): # for each element in the CssTable at the good index
         for j in range(0, len(CssTable[ModifierIndex][i].name)):# each name has to be displayed independently
 
-            NewCheckButton = CheckButtonExtended(lfStep2.children["lfmodifier"].children["modifierworkspace"].children["canvas"].children["frame"],CssTable[ModifierIndex][i].name[j],NameLenght,CssTable[ModifierIndex][i].selectmode[j])
+            NewCheckButton = CheckButtonExtended(lfStep2.children["lfmodifier"].children["modifierworkspace"].children["canvas"].children["frame"],CssTable[ModifierIndex][i].name[j],int(NameLenght*sqrt(sqrt(WindowSetting['Reduce']))),CssTable[ModifierIndex][i].selectmode[j])
             ButtonList.append(NewCheckButton)
-            
+
     #Apply Display settings:
 
     for i in range(0,len(ButtonList)):
@@ -123,7 +124,7 @@ def FillCanvasStep2(lfStep2, ModifierDict, CssTable, ButtonList, ChoiceList, Cho
                 Column = ColumnStart
                 Row +=1
         ButtonList[i].checkbutton.grid(row=Row, column=Column, sticky="w")
-        lfStep2.children["lfmodifier"].children["modifierworkspace"].children["canvas"].children["frame"].grid_columnconfigure(Column,minsize=773/ModifierPerLine)
+        lfStep2.children["lfmodifier"].children["modifierworkspace"].children["canvas"].children["frame"].grid_columnconfigure(Column,minsize=lfStep2.children["lfmodifier"].children["modifierworkspace"].children["canvas"].children["frame"].winfo_width()/ModifierPerLine)
         Column+=1
 
     if (len(ToDisplay)<2):
